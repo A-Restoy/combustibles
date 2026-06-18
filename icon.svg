@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Fondo redondeado azul -->
+  <rect width="512" height="512" rx="110" fill="#1565C0"/>
+
+  <!-- Cuerpo del surtidor -->
+  <rect x="110" y="160" width="210" height="280" rx="18" fill="white"/>
+
+  <!-- Pantalla del precio -->
+  <rect x="130" y="195" width="170" height="95" rx="10" fill="#E3F2FD"/>
+  <text x="215" y="250" text-anchor="middle" font-size="52" font-weight="700"
+        font-family="'Courier New', monospace" fill="#1565C0">1.32</text>
+  <text x="215" y="278" text-anchor="middle" font-size="22"
+        font-family="Arial, sans-serif" fill="#1565C0">€ / litro</text>
+
+  <!-- Panel inferior del surtidor -->
+  <rect x="130" y="310" width="170" height="105" rx="10" fill="#BBDEFB"/>
+
+  <!-- Manguera -->
+  <path d="M320 215 Q390 215 390 275 L390 340" stroke="white" stroke-width="22"
+        fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Pistola / boquilla -->
+  <rect x="365" y="336" width="50" height="28" rx="10" fill="white"/>
+  <rect x="348" y="348" width="24" height="16" rx="6" fill="#90CAF9"/>
+
+  <!-- Tapa superior -->
+  <rect x="98" y="138" width="234" height="34" rx="12" fill="white"/>
+
+  <!-- Pilona / base -->
+  <rect x="125" y="440" width="180" height="28" rx="10" fill="white"/>
+</svg>

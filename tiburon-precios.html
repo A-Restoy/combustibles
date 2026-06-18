@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Combustible · Albolote</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/icon.svg">
+  <meta name="theme-color" content="#1565C0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Combustible">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #f4f4f0; color: #1a1a1a; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+    .wrapper { display: flex; flex-direction: row; flex-wrap: wrap; gap: 1.25rem; max-width: 960px; width: 100%; align-items: flex-start; }
+    #card-tiburon, #card-juncadiesel, #card-minioil { flex: 1 1 260px; }
+    .card { background: #fff; border-radius: 16px; padding: 2rem; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    .header { display: flex; align-items: center; gap: 14px; margin-bottom: 1.5rem; }
+    .logo { width: 48px; height: 48px; border-radius: 50%; background: #fff3e0; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+    .name { font-weight: 600; font-size: 16px; }
+    .address { font-size: 13px; color: #666; margin-top: 2px; }
+    .badge { display: inline-block; background: #e8f5e9; color: #2e7d32; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; margin-left: 8px; vertical-align: middle; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
+    .fuel { background: #fafafa; border: 1px solid #eee; border-radius: 12px; padding: 1rem; text-align: center; }
+    .fuel-label { font-size: 12px; color: #888; margin-bottom: 6px; }
+    .fuel-price { font-size: 26px; font-weight: 700; color: #1a1a1a; }
+    .fuel-unit { font-size: 12px; color: #aaa; }
+    .fuel.gasolina { border-top: 3px solid #ff9800; }
+    .fuel.gasoleo { border-top: 3px solid #2196f3; }
+    .fuel.glp { border-top: 3px solid #4caf50; }
+    .meta { font-size: 12px; color: #aaa; border-top: 1px solid #eee; padding-top: 1rem; display: flex; flex-direction: column; gap: 4px; }
+    .meta span { display: flex; justify-content: space-between; }
+    .meta b { color: #555; font-weight: 500; }
+    .btn { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; background: #fff; font-size: 14px; color: #333; cursor: pointer; transition: background 0.15s; }
+    .btn:hover { background: #f5f5f5; }
+    .btn-row, .footer { flex: 1 1 100%; }
+    .error { background: #fff3f3; border: 1px solid #ffcdd2; border-radius: 10px; padding: 1rem; color: #c62828; font-size: 14px; line-height: 1.5; }
+    .loading { text-align: center; padding: 2rem 0; color: #999; font-size: 14px; }
+    .spin { display: inline-block; animation: spin 0.9s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .footer { font-size: 11px; color: #bbb; text-align: center; }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div id="card-tiburon" class="card">
+    <div class="header">
+      <div class="logo">⛽</div>
+      <div>
+        <div class="name">Low Cost Tiburonoil</div>
+        <div class="address">Calle Loja, S/N · Albolote</div>
+      </div>
+    </div>
+    <div id="loading-tiburon" class="loading"><span class="spin" style="font-size:24px; display:block; margin-bottom:6px;">⟳</span>Consultando MINETUR...</div>
+    <div id="content-tiburon" style="display:none"></div>
+    <div id="error-tiburon" style="display:none"></div>
+  </div>
+
+  <div id="card-juncadiesel" class="card">
+    <div class="header">
+      <div class="logo" style="background:#e3f2fd;">⛽</div>
+      <div>
+        <div class="name">Juncadiesel</div>
+        <div class="address">Calle Baza, 328 · Albolote</div>
+      </div>
+    </div>
+    <div id="loading-juncadiesel" class="loading"><span class="spin" style="font-size:24px; display:block; margin-bottom:6px;">⟳</span>Consultando MINETUR...</div>
+    <div id="content-juncadiesel" style="display:none"></div>
+    <div id="error-juncadiesel" style="display:none"></div>
+  </div>
+
+  <div id="card-minioil" class="card">
+    <div class="header">
+      <div class="logo" style="background:#fce4ec;">⛽</div>
+      <div>
+        <div class="name">Minioil Albolote</div>
+        <div class="address">Calle Motril, Parcela 243 · Albolote</div>
+      </div>
+    </div>
+    <div id="loading-minioil" class="loading"><span class="spin" style="font-size:24px; display:block; margin-bottom:6px;">⟳</span>Consultando MINETUR...</div>
+    <div id="content-minioil" style="display:none"></div>
+    <div id="error-minioil" style="display:none"></div>
+  </div>
+
+  <div class="btn-row"><button class="btn" onclick="cargar()">⟳ Actualizar precios</button></div>
+
+  <div class="footer">Fuente: MINETUR · Geoportal Gasolineras España</div>
+  <div class="footer">(c) Antonio Restoy 2026 </div>
+</div>
+
+<script>
+// file:// → proxy local (servidor.js); HTTP → función serverless de Vercel
+const API_URL = location.protocol === "file:"
+  ? "http://localhost:3000/precios"
+  : "/api/precios";
+
+const ESTACIONES = [
+  { ideess: "12671", nombre: "TIBURONOIL",  slot: "tiburon" },
+  { ideess: "12750", nombre: "JUNCADIESEL", slot: "juncadiesel" },
+  { ideess: "11079", nombre: "MINIOIL",     slot: "minioil" },
+];
+
+const CAMPOS = {
+  "Precio Gasolina 95 E5": { label: "Gasolina 95", clase: "gasolina" },
+  "Precio Gasoleo A":      { label: "Gasóleo A",   clase: "gasoleo" },
+};
+
+function renderEstacion(est, slot, fecha) {
+  let gridHTML = '<div class="grid">';
+  let hayPrecios = false;
+  for (const [campo, meta] of Object.entries(CAMPOS)) {
+    const raw = est[campo];
+    if (!raw || raw.trim() === "") continue;
+    const precio = parseFloat(raw.replace(",", "."));
+    if (isNaN(precio)) continue;
+    hayPrecios = true;
+    gridHTML += `
+      <div class="fuel ${meta.clase}">
+        <div class="fuel-label">${meta.label}</div>
+        <div class="fuel-price">${precio.toFixed(3)}</div>
+        <div class="fuel-unit">€ / litro</div>
+      </div>`;
+  }
+  gridHTML += "</div>";
+
+  if (!hayPrecios) {
+    document.getElementById("content-" + slot).innerHTML = '<p style="color:#999;font-size:14px;padding:1rem 0">Sin precios reportados en este momento.</p>';
+  } else {
+    document.getElementById("content-" + slot).innerHTML = gridHTML + `
+      <div class="meta">
+        <span><b>Última actualización</b> <span>${fecha}</span></span>
+        <span><b>ID MINETUR</b> <span>${est["IDEESS"] || "—"}</span></span>
+        <span><b>Horario</b> <span>${est["Horario"] || "—"}</span></span>
+      </div>`;
+  }
+
+  document.getElementById("loading-" + slot).style.display = "none";
+  document.getElementById("content-" + slot).style.display = "block";
+}
+
+async function cargar() {
+  for (const { slot } of ESTACIONES) {
+    document.getElementById("loading-" + slot).style.display = "block";
+    document.getElementById("content-" + slot).style.display = "none";
+    document.getElementById("error-" + slot).style.display = "none";
+  }
+
+  try {
+    const res = await fetch(API_URL);
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    const lista = data.ListaEESSPrecio ?? [];
+    const fecha = data.Fecha ?? "—";
+
+    for (const { ideess, nombre, slot } of ESTACIONES) {
+      const est = lista.find(e => e["IDEESS"] === ideess)
+        ?? lista.find(e => e["Rótulo"]?.toUpperCase().includes(nombre));
+
+      if (est) {
+        renderEstacion(est, slot, fecha);
+      } else {
+        document.getElementById("loading-" + slot).style.display = "none";
+        document.getElementById("error-" + slot).style.display = "block";
+        document.getElementById("error-" + slot).innerHTML =
+          `<div class="error"><b>Error:</b> No se encontró la estación ${nombre} en la respuesta del MINETUR.</div>`;
+      }
+    }
+  } catch(e) {
+    for (const { slot } of ESTACIONES) {
+      document.getElementById("loading-" + slot).style.display = "none";
+      document.getElementById("error-" + slot).style.display = "block";
+      document.getElementById("error-" + slot).innerHTML =
+        `<div class="error"><b>Error:</b> ${e.message}</div>`;
+    }
+  }
+}
+
+cargar();
+</script>
+</body>
+</html>
